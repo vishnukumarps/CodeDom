@@ -13,7 +13,7 @@ namespace SampleCodeDom
     {
         CodeCompileUnit targetUnit;
         CodeTypeDeclaration targetClass;
-        private const string outputFileName = "VesselController17.cs";
+        private const string outputFileName = "VesselsController.cs";
 
         public TestApp()
         {
@@ -23,14 +23,14 @@ namespace SampleCodeDom
             samples.Imports.Add(new CodeNamespaceImport("System"));
             samples.Imports.Add(new CodeNamespaceImport("Microsoft.AspNetCore.Mvc"));
             
-            targetClass = new CodeTypeDeclaration("VesselController17:Controller");
+            targetClass = new CodeTypeDeclaration("VesselsController:Controller");
             targetClass.IsClass = true;
             targetClass.TypeAttributes =
                 TypeAttributes.Public ;
 
-            targetClass.CustomAttributes.Add(new CodeAttributeDeclaration("ApiController", new CodeAttributeArgument(new CodePrimitiveExpression())));
-            targetClass.CustomAttributes.Add(new CodeAttributeDeclaration("Route", new CodeAttributeArgument(new CodePrimitiveExpression("[controller]"))));
-
+           
+            targetClass.CustomAttributes.Add(new CodeAttributeDeclaration("Route", new CodeAttributeArgument(new CodePrimitiveExpression("api/[controller]"))));
+            targetClass.CustomAttributes.Add(new CodeAttributeDeclaration("ApiController"));
             samples.Types.Add(targetClass);
             targetUnit.Namespaces.Add(samples);
         }
@@ -138,14 +138,16 @@ namespace SampleCodeDom
             CodeMemberMethod mymethod = new CodeMemberMethod();
             mymethod.Name = methodName;
             mymethod.CustomAttributes.Add(new CodeAttributeDeclaration("HttpGet"));
+            mymethod.CustomAttributes.Add(new CodeAttributeDeclaration("Route", 
+                new CodeAttributeArgument(new CodePrimitiveExpression(methodName))));
 
             CodeTypeReference ctr = new CodeTypeReference("String");
             //Assign the return type to the method.
             mymethod.ReturnType = ctr;
             mymethod.Attributes = MemberAttributes.Public | MemberAttributes.Final;
             CodeSnippetExpression snippet1 = new CodeSnippetExpression("Random rn = new Random()");
-            CodeSnippetExpression snippet2 = new CodeSnippetExpression("rn.Next(1000,2000)");
-            CodeSnippetExpression snippet3 = new CodeSnippetExpression("return rn.ToString()");
+            CodeSnippetExpression snippet2 = new CodeSnippetExpression("var x=rn.Next(1000,2000)");
+            CodeSnippetExpression snippet3 = new CodeSnippetExpression("return x.ToString()");
             CodeExpressionStatement stmt1 = new CodeExpressionStatement(snippet1);
             CodeExpressionStatement stmt2 = new CodeExpressionStatement(snippet2);
             CodeExpressionStatement stmt3 = new CodeExpressionStatement(snippet3);
@@ -155,6 +157,33 @@ namespace SampleCodeDom
             mymethod.Statements.Add(stmt3);
             mymethod.Attributes = MemberAttributes.Public;
             
+
+            targetClass.Members.Add(mymethod);
+        }
+
+        public void AddCustomConstructor(string name)
+        {
+            // Declaring a ToString method
+            CodeMemberMethod mymethod = new CodeMemberMethod();
+            mymethod.Name = name;
+            mymethod.CustomAttributes.Add(new CodeAttributeDeclaration("HttpGet"));
+
+            CodeTypeReference ctr = new CodeTypeReference("String");
+            //Assign the return type to the method.
+           
+            mymethod.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+            CodeSnippetExpression snippet1 = new CodeSnippetExpression("Random rn = new Random()");
+            CodeSnippetExpression snippet2 = new CodeSnippetExpression("rn.Next(1000,2000)");
+         
+            CodeExpressionStatement stmt1 = new CodeExpressionStatement(snippet1);
+            CodeExpressionStatement stmt2 = new CodeExpressionStatement(snippet2);
+           
+
+            mymethod.Statements.Add(stmt1);
+            mymethod.Statements.Add(stmt2);
+           
+            mymethod.Attributes = MemberAttributes.Public;
+
 
             targetClass.Members.Add(mymethod);
         }
@@ -250,9 +279,10 @@ namespace SampleCodeDom
 
             sample.AddFields(fieldNames);
             sample.AddNewProperty(propertyNames);
-            sample.AddMethod("GetVessel");
+            sample.AddMethod("GetVesselNumber");
+            
             //sample.AddConstructor(parameters);
-          //  sample.AddEntryPoint();
+            //  sample.AddEntryPoint();
             sample.GenerateCSharpCode(outputFileName);
         }
     }

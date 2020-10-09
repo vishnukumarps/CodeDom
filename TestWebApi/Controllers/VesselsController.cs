@@ -13,9 +13,9 @@ namespace Vesseels
     using Microsoft.AspNetCore.Mvc;
     
     
-    [ApiController(null)]
-    [Route("[controller]")]
-    public class VesselController13:Controller
+    [Route("api/[controller]")]
+    [ApiController()]
+    public class VesselsController:Controller
     {
         
         // The FirstName of the object.
@@ -29,10 +29,13 @@ public String Name { get; set; }
         /// this is String property
 public String Category { get; set; }
         
-        public virtual void AddVessel()
+        [HttpGet()]
+        [Route("GetVesselNumber")]
+        public virtual String GetVesselNumber()
         {
             Random rn = new Random();
-            rn.Next(1000,2000);
+            var x=rn.Next(1000,2000);
+            return x.ToString();
         }
     }
 }
