@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <StartupObject>SampleCodeDom.InterfaceGenerator</StartupObject>
+    <StartupObject>SampleCodeDom.TestApp</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
