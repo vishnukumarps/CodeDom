@@ -13,9 +13,10 @@ namespace SampleCodeDom
     {
         CodeCompileUnit targetUnit;
         CodeTypeDeclaration targetClass;
-        private const string outputFileName = "VesselsController.cs";
+        string controllerName="";
+        string outputFileName = "";
 
-        public TestApp()
+        public TestApp(string className)
         {
             
             targetUnit = new CodeCompileUnit();
@@ -23,7 +24,7 @@ namespace SampleCodeDom
             samples.Imports.Add(new CodeNamespaceImport("System"));
             samples.Imports.Add(new CodeNamespaceImport("Microsoft.AspNetCore.Mvc"));
             
-            targetClass = new CodeTypeDeclaration("VesselsController:Controller");
+            targetClass = new CodeTypeDeclaration(""+className+"Controller"+":Controller");
             targetClass.IsClass = true;
             targetClass.TypeAttributes =
                 TypeAttributes.Public ;
@@ -247,7 +248,7 @@ namespace SampleCodeDom
             CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
             CodeGeneratorOptions options = new CodeGeneratorOptions();
             options.BracingStyle = "C";
-            using (StreamWriter sourceWriter = new StreamWriter(fileName))
+            using (StreamWriter sourceWriter = new StreamWriter(@"C:\Users\Dell E6520\source\repos\SampleCodeDom\SampleCodeDom\Controllers\" + fileName))
             {
                 provider.GenerateCodeFromCompileUnit(
                     targetUnit, sourceWriter, options);
@@ -260,7 +261,9 @@ namespace SampleCodeDom
 
         static void Main()
         {
-            TestApp sample = new TestApp();
+            Console.WriteLine("Enter Controller Name");
+            var controllerName = Console.ReadLine();
+            TestApp sample = new TestApp(controllerName);
 
             
             Dictionary<string, string> fieldNames = new Dictionary<string, string>();
@@ -279,11 +282,11 @@ namespace SampleCodeDom
 
             sample.AddFields(fieldNames);
             sample.AddNewProperty(propertyNames);
-            sample.AddMethod("GetVesselNumber");
+            sample.AddMethod("Get");
             
             //sample.AddConstructor(parameters);
             //  sample.AddEntryPoint();
-            sample.GenerateCSharpCode(outputFileName);
+            sample.GenerateCSharpCode(controllerName+"Controller"+".cs");
         }
     }
 }
