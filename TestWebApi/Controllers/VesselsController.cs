@@ -11,24 +11,20 @@ namespace Vesseels
 {
     using System;
     using Microsoft.AspNetCore.Mvc;
-    
-    
     [Route("api/[controller]")]
     [ApiController()]
     public class VesselsController:Controller
-    {
-        
-        // The FirstName of the object.
+    {      
+      // The FirstName of the object.
         private string FirstName;
         
         // The LastName of the object.
         private string LastName;
-        
-        /// this is String property
-public String Name { get; set; }
-        /// this is String property
-public String Category { get; set; }
-        
+       
+                /// this is String property
+        public String Name { get; set; }
+                /// this is String property
+        public String Category { get; set; }     
         [HttpGet()]
         [Route("GetVesselNumber")]
         public virtual String GetVesselNumber()
