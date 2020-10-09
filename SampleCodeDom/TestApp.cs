@@ -12,14 +12,14 @@ namespace SampleCodeDom
     {
         CodeCompileUnit targetUnit;
         CodeTypeDeclaration targetClass;
-        private const string outputFileName = "VesselController5.cs";
+        private const string outputFileName = "VesselController6.cs";
 
         public TestApp()
         {
             targetUnit = new CodeCompileUnit();
             CodeNamespace samples = new CodeNamespace("Vesseels");
             samples.Imports.Add(new CodeNamespaceImport("System"));
-            targetClass = new CodeTypeDeclaration("VesselController5");
+            targetClass = new CodeTypeDeclaration("VesselController6");
             targetClass.IsClass = true;
             targetClass.TypeAttributes =
                 TypeAttributes.Public | TypeAttributes.Sealed;
@@ -91,13 +91,19 @@ namespace SampleCodeDom
 
         }
 
-        public  void NewMethod()
+        public  void AddNewProperty(Dictionary<string,string> propertyList)
         {
-           // CodeTypeDeclaration newType = new CodeTypeDeclaration("TestType");
-            CodeSnippetTypeMember snippet = new CodeSnippetTypeMember();
-            snippet.Comments.Add(new CodeCommentStatement("this is integer property", true));
-            snippet.Text = "public int IntergerProperty { get; set; }";
-            targetClass.Members.Add(snippet);
+            foreach (var item in propertyList)
+            {
+                CodeSnippetTypeMember snippet = new CodeSnippetTypeMember();
+                snippet.Comments.Add(new CodeCommentStatement("this is "+item.Value+" property", true));
+                snippet.Text = "public "+item.Value+" "+item.Key+" { get; set; }";
+                targetClass.Members.Add(snippet);
+
+            }
+            
+
+
         }
 
         public void AddProperties()
@@ -209,7 +215,7 @@ namespace SampleCodeDom
         {
             TestApp sample = new TestApp();
 
-            sample.NewMethod();
+            
             Dictionary<string, string> fieldNames = new Dictionary<string, string>();
             fieldNames.Add("FirstName","String");
             fieldNames.Add("LastName", "String");
@@ -225,7 +231,7 @@ namespace SampleCodeDom
 
 
             sample.AddFields(fieldNames);
-           // sample.AddProperties(propertyNames);
+            sample.AddNewProperty(propertyNames);
             sample.AddMethod("AddVessel");
             sample.AddConstructor(parameters);
             sample.AddEntryPoint();
